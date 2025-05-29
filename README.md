@@ -31,9 +31,8 @@ Git: For cloning the repository
 
 Installation
 
-Clone the Repository:
-git clone https://github.com/your-username/recipefinder-backend.git
-cd recipefinder-backend
+Clone the Repository
+cd Receipe-AI
 
 
 Install Dependencies:
@@ -43,11 +42,11 @@ npm install
 Set Up Environment Variables:Create a .env file in the project root and configure it based on the provided .env example:
 # RecipeFinder Environment Variables
 OPENAI_API_KEY=your_openai_api_key_here
-PORT=3000
+PORT=""
 NODE_ENV=development
-RATE_LIMIT_WINDOW=900000
+RATE_LIMIT_WINDOW=""
 RATE_LIMIT_MAX=10
-ALLOWED_ORIGINS=http://localhost:3000,http://127.0.0.1:3000,http://localhost:5500
+ALLOWED_ORIGINS=""
 SESSION_SECRET=your_session_secret_here
 
 
@@ -62,40 +61,21 @@ Port: Change PORT in .env if you need a different port.
 Usage
 
 Start the Server:
-
 For production:npm start
-
-
 For development with auto-restart:npm run dev
-
-
-
-
-Access the Application:
-
-Open http://localhost:3000 in a browser to load the recipe_finder.html frontend.
-Use the health check endpoint: http://localhost:3000/api/health
-
 
 Interact with the API:
 
 Recipe Suggestions: Send a POST request to /api/suggest-recipes with a JSON body containing an array of ingredients:{
   "ingredients": ["domates", "salatalık", "zeytinyağı"]
 }
-
-
 Chat Assistant: Send a POST request to /api/chat with a JSON body containing a message:{
   "message": "Zeytinyağlı yaprak sarma nasıl yapılır?"
 }
 
-
-
-
-
 API Endpoints
 
 GET /api/health
-
 Returns server status and configuration details.
 Response:{
   "status": "OK",
@@ -105,16 +85,11 @@ Response:{
   "server": "RecipeFinder Backend"
 }
 
-
-
-
 POST /api/suggest-recipes
-
 Generates recipe suggestions based on provided ingredients.
 Request Body:{
   "ingredients": ["ingredient1", "ingredient2", ...]
 }
-
 
 Response:{
   "recipes": [
@@ -131,26 +106,15 @@ Response:{
   ],
   "timestamp": "2025-05-29T17:40:00.000Z"
 }
-
-
-
-
 POST /api/chat
-
 Interacts with the AI cooking assistant.
 Request Body:{
   "message": "Your question or request"
 }
-
-
 Response:{
   "response": "AI response text",
   "timestamp": "2025-05-29T17:40:00.000Z"
 }
-
-
-
-
 
 Project Structure
 recipefinder-backend/
@@ -162,7 +126,6 @@ recipefinder-backend/
 └── node_modules/       # Installed dependencies
 
 Scripts
-
 npm start: Runs the server in production mode.
 npm run dev: Runs the server with nodemon for development.
 npm test: Runs tests using Jest.
@@ -170,7 +133,6 @@ npm run lint: Lints code using ESLint.
 npm run format: Formats code using Prettier.
 
 Contributing
-
 Fork the repository.
 Create a new branch (git checkout -b feature/your-feature).
 Make your changes and commit (git commit -m "Add your feature").

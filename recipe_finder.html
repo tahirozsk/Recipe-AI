@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RecipeFinder - Akıllı Tarif Önerileri</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --white: #FFFFFF;
+      --blue: #3498DB;
+      --navy-blue: #2C3E50;
+      --light-grey: #ECF0F1;
+      --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s ease;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background-color: var(--white);
+      color: var(--navy-blue);
+      line-height: 1.6;
+    }
+
+    header {
+      background-color: var(--blue);
+      padding: 1.5rem;
+      color: var(--white);
+      text-align: center;
+      box-shadow: var(--shadow);
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      font-weight: 600;
+    }
+
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      padding: 1rem;
+      background-color: var(--navy-blue);
+      box-shadow: var(--shadow);
+    }
+
+    nav a {
+      color: var(--white);
+      text-decoration: none;
+      font-weight: 400;
+      font-size: 1.1rem;
+      transition: var(--transition);
+    }
+
+    nav a:hover {
+      color: var(--blue);
+      transform: translateY(-2px);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 3rem auto;
+      padding: 0 1.5rem;
+    }
+
+    .section {
+      background-color: var(--white);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2.5rem;
+      box-shadow: var(--shadow);
+      color: var(--navy-blue);
+      transition: var(--transition);
+    }
+
+    .section:hover {
+      transform: translateY(-5px);
+    }
+
+    .section h2 {
+      color: var(--navy-blue);
+      margin-bottom: 1.5rem;
+      font-size: 1.8rem;
+      font-weight: 600;
+    }
+
+    #ingredient-input {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    #ingredient-input input {
+      flex: 1;
+      padding: 0.75rem;
+      border: 1px solid var(--navy-blue);
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: var(--transition);
+    }
+
+    #ingredient-input input:focus {
+      outline: none;
+      border-color: var(--blue);
+      box-shadow: 0 0 5px rgba(52, 152, 219, 0.2);
+    }
+
+    #ingredient-list {
+      margin-bottom: 1rem;
+      font-size: 1rem;
+      color: var(--navy-blue);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .ingredient-item {
+      display: inline-flex;
+      align-items: center;
+      background-color: var(--light-grey);
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      margin: 0.5rem 0.5rem 0.5rem 0;
+    }
+
+    .ingredient-item span {
+      margin-right: 0.5rem;
+    }
+
+    .remove-ingredient {
+      background-color: #e74c3c;
+      border: none;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: var(--transition);
+    }
+
+    .remove-ingredient:hover {
+      background-color: #c0392b;
+      transform: scale(1.1);
+    }
+
+    button {
+      background-color: var(--blue);
+      color: var(--white);
+      border: none;
+      padding: 0.75rem 2rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: var(--transition);
+    }
+
+    button:hover {
+      background-color: var(--navy-blue);
+      transform: translateY(-2px);
+    }
+
+    #recipes, #history, #saved-foods {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .recipe-card, .history-item, .saved-food-item {
+      background-color: var(--light-grey);
+      padding: 1.5rem;
+      border-radius: 8px;
+      transition: var(--transition);
+    }
+
+    .recipe-card:hover, .history-item:hover, .saved-food-item:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow);
+    }
+
+    .recipe-card h3, .history-item h3, .saved-food-item h3 {
+      color: var(--navy-blue);
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+
+    .recipe-card p, .history-item p, .saved-food-item p,
+    .recipe-card ol, .saved-food-item ol {
+      display: block;
+      font-size: 1rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .recipe-card .add-button {
+      position: absolute;
+      bottom: 1rem;
+      right: 1rem;
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
+    }
+
+    .recipe-card .generate-image-button {
+      position: absolute;
+      bottom: 1rem;
+      right: 7rem;
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
+    }
+
+    .recipe-card {
+      position: relative;
+    }
+
+    .recipe-image {
+      margin-top: 0.5rem;
+      text-align: center;
+    }
+
+    .recipe-image img {
+      max-width: 100%;
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    #chat-box {
+      height: 350px;
+      overflow-y: auto;
+      border: 1px solid var(--navy-blue);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      border-radius: 10px;
+      background-color: var(--white);
+      color: var(--navy-blue);
+      font-size: 0.95rem;
+    }
+
+    #chat-input {
+      display: flex;
+      gap: 1rem;
+    }
+
+    #chat-input input {
+      flex: 1;
+      padding: 0.75rem;
+      border: 1px solid var(--navy-blue);
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: var(--transition);
+    }
+
+    #chat-input input:focus {
+      outline: none;
+      border-color: var(--blue);
+      box-shadow: 0 0 5px rgba(52, 152, 219, 0.2);
+    }
+
+    select {
+      padding: 0.75rem;
+      border: 1px solid var(--navy-blue);
+      border-radius: 8px;
+      font-size: 1rem;
+      background-color: var(--white);
+      color: var(--navy-blue);
+      transition: var(--transition);
+      min-width: 200px;
+    }
+
+    select:focus {
+      outline: none;
+      border-color: var(--blue);
+      box-shadow: 0 0 5px rgba(52, 152, 219, 0.2);
+    }
+
+    select option {
+      background-color: var(--white);
+      color: var(--navy-blue);
+    }
+
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      background-color: var(--navy-blue);
+      color: var(--white);
+      position: relative;
+      bottom: 0;
+      width: 100%;
+      font-size: 0.9rem;
+      box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .loading-notification {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: var(--navy-blue);
+      color: var(--white);
+      padding: 1rem 2rem;
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      font-size: 1.1rem;
+      font-weight: 400;
+      z-index: 1000;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>RecipeFinder</h1>
+  </header>
+  <nav>
+    <a href="#ingredient-section">Malzeme Gir</a>
+    <a href="#recipes">Tarifler</a>
+    <a href="#chat-section">AI Asistan</a>
+    <a href="#history">Geçmiş</a>
+    <a href="#saved-foods">Kaydedilen Yiyecekler</a>
+  </nav>
+  <div class="loading-notification" id="loadingNotification">Tarifler Yükleniyor...</div>
+  <div class="container">
+    <div class="section" id="ingredient-section">
+      <h2>Malzemelerinizi Girerek Tarif Bulun</h2>
+      <div id="ingredient-input">
+        <input type="text" id="ingredient" placeholder="Elinizdeki malzemeleri yazın (örn: patates, kıyma)" />
+        <button onclick="addIngredient()">Ekle</button>
+      </div>
+      <div id="ingredient-list"></div>
+      <button onclick="getRecipes()">Tarif Öner</button>
+    </div>
+    <div class="section" id="recipes">
+      <h2>Sizin İçin Önerilen Tarifler</h2>
+      <div id="recipe-list"></div>
+    </div>
+    <div class="section" id="chat-section">
+      <h2>Akıllı Yemek Asistanı ile Konuşun</h2>
+      <div id="chat-box"></div>
+      <div id="chat-input">
+        <input type="text" id="chat-message" placeholder="Tarif önerisi veya pişirme ipucu isteyin..." />
+        <button onclick="sendChat()">Gönder</button>
+      </div>
+    </div>
+    <div class="section" id="history">
+      <h2>Önceki Tarif Aramalarınız</h2>
+      <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+          <label for="history-dropdown">Tarif Seç:</label>
+          <select id="history-dropdown" onchange="displaySelectedHistoryRecipe()">
+          </select>
+      </div>
+      <div id="selected-history-recipe">
+      </div>
+    </div>
+    <div class="section" id="saved-foods">
+      <h2>Favori Tarifleriniz</h2>
+      <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+          <label for="saved-foods-dropdown">Favori Tarif Seç:</label>
+          <select id="saved-foods-dropdown" onchange="displaySelectedSavedFood()">
+          </select>
+      </div>
+      <div id="selected-saved-food-recipe">
+      </div>
+    </div>
+  </div>
+  <footer>
+    © 2025 RecipeFinder. Tüm hakları saklıdır. | Bu platform yapay zeka desteklidir ve kullanıcı deneyimini geliştirmek için sürekli güncellenmektedir.
+  </footer>
+
+  <script>
+    let ingredients = [];
+    let recipeHistory = JSON.parse(localStorage.getItem('recipeHistory')) || [];
+    let savedFoods = JSON.parse(localStorage.getItem('savedFoods')) || [];
+    let lastRecipes = [];
+
+    window.onload = () => {
+      displayHistory();
+      displaySavedFoods();
+    };
+
+    function addIngredient() {
+      const input = document.getElementById('ingredient');
+      const value = input.value.trim();
+      if (value) {
+        ingredients.push(value);
+        input.value = '';
+        updateIngredientList();
+      }
+    }
+
+    function updateIngredientList() {
+      const list = document.getElementById('ingredient-list');
+      list.innerHTML = ingredients
+        .map((ing, index) => `
+          <div class="ingredient-item">
+            <span>${ing}</span>
+            <button class="remove-ingredient" onclick="removeIngredient(${index})">×</button>
+          </div>
+        `)
+        .join('');
+    }
+
+    function removeIngredient(index) {
+      ingredients.splice(index, 1);
+      updateIngredientList();
+    }
+
+    async function getRecipes() {
+      if (ingredients.length === 0) {
+        alert('Lütfen en az bir malzeme ekleyin.');
+        return;
+      }
+
+      document.getElementById('loadingNotification').style.display = 'block';
+
+      try {
+        const response = await fetch('/api/suggest-recipes', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ingredients })
+        });
+        const data = await response.json();
+        if (data.error) {
+          alert(data.error);
+        } else {
+          lastRecipes = data.recipes;
+          displayRecipes(data.recipes);
+          saveToHistory(data.recipes);
+        }
+      } catch (err) {
+        alert('Tarifler alınamadı.');
+      } finally {
+        document.getElementById('loadingNotification').style.display = 'none';
+      }
+    }
+
+    function displayRecipes(recipes) {
+      const recipeList = document.getElementById('recipe-list');
+      recipeList.innerHTML = recipes.map((recipe, index) => `
+        <div class="recipe-card">
+          <h3>${index + 1}. Tarif: ${recipe.name}</h3>
+          <p><strong>Malzemeler:</strong> ${recipe.ingredients.join(', ')}</p>
+          <p><strong>Tarif:</strong></p>
+          <ol>${recipe.instructions.map(step => `<li>${step}</li>`).join('')}</ol>
+          <p><strong>Kalori:</strong> ${recipe.calories} kcal</p>
+          <p><strong>Porsiyon:</strong> ${recipe.portions}</p>
+          <p><strong>Hazırlık Süresi:</strong> ${recipe.prepTime} dakika</p>
+          <p><strong>Sağlık Puanı:</strong> ${recipe.healthRating}/10</p>
+          <button class="generate-image-button" onclick="generateRecipeImage(${index})">Resim Oluştur</button>
+          <button class="add-button" onclick="addToSavedFoods(${index})">Ekle</button>
+          <div id="recipe-image-${index}" class="recipe-image"></div>
+        </div>
+      `).join('');
+    }
+
+    function generateRecipeImage(index) {
+      const imageDiv = document.getElementById(`recipe-image-${index}`);
+      imageDiv.innerHTML = '<p>Resim yükleniyor... (API entegrasyonu bekleniyor)</p>';
+    }
+
+    function addToSavedFoods(index) {
+      const recipe = lastRecipes[index];
+      savedFoods.push({ ...recipe, id: Date.now() });
+      localStorage.setItem('savedFoods', JSON.stringify(savedFoods));
+      displaySavedFoods();
+    }
+
+    function saveToHistory(recipes) {
+      const entries = recipes.map(r => ({ ...r, timestamp: new Date().toISOString() }));
+      recipeHistory = [...recipeHistory, ...entries];
+      localStorage.setItem('recipeHistory', JSON.stringify(recipeHistory));
+      displayHistory();
+    }
+
+    function displayHistory() {
+      const historyDropdown = document.getElementById('history-dropdown');
+      historyDropdown.innerHTML = '';
+      const selectedHistoryRecipeDiv = document.getElementById('selected-history-recipe');
+      selectedHistoryRecipeDiv.innerHTML = '';
+
+      if (recipeHistory.length === 0) {
+        historyDropdown.innerHTML = '<option value="">Geçmiş bulunmuyor</option>';
+        selectedHistoryRecipeDiv.innerHTML = '<p>Henüz geçmiş tarif araması yapmadınız.</p>';
+        return;
+      }
+
+      recipeHistory.forEach((recipe, index) => {
+        const option = document.createElement('option');
+        option.value = index;
+        option.textContent = `${index + 1}. Tarif: ${recipe.name} (${new Date(recipe.timestamp).toLocaleDateString()})`;
+        historyDropdown.appendChild(option);
+      });
+
+      if (recipeHistory.length > 0) {
+        displaySelectedHistoryRecipe();
+      }
+    }
+
+    function displaySelectedHistoryRecipe() {
+      const historyDropdown = document.getElementById('history-dropdown');
+      const selectedIndex = historyDropdown.value;
+      const selectedHistoryRecipeDiv = document.getElementById('selected-history-recipe');
+
+      if (selectedIndex === "") {
+        selectedHistoryRecipeDiv.innerHTML = '<p>Bir tarif seçiniz.</p>';
+        return;
+      }
+
+      const recipe = recipeHistory[selectedIndex];
+      selectedHistoryRecipeDiv.innerHTML = `
+        <div class="history-item">
+          <h3>${recipe.name}</h3>
+          <p><strong>Tarih:</strong> ${new Date(recipe.timestamp).toLocaleString()}</p>
+          <p><strong>Malzemeler:</strong> ${recipe.ingredients?.join(', ') || '-'}</p>
+          <p><strong>Tarif:</strong></p>
+          <ol>${recipe.instructions?.map(step => `<li>${step}</li>`).join('') || ''}</ol>
+          <p><strong>Kalori:</strong> ${recipe.calories || '-'} kcal</p>
+          <p><strong>Porsiyon:</strong> ${recipe.portions || '-'}</p>
+          <p><strong>Hazırlık Süresi:</strong> ${recipe.prepTime || '-'} dakika</p>
+          <p><strong>Sağlık Puanı:</strong> ${recipe.healthRating || '-'}/10</p>
+        </div>
+      `;
+    }
+
+    function displaySavedFoods() {
+      const savedFoodsDropdown = document.getElementById('saved-foods-dropdown');
+      savedFoodsDropdown.innerHTML = '';
+      const selectedSavedFoodRecipeDiv = document.getElementById('selected-saved-food-recipe');
+      selectedSavedFoodRecipeDiv.innerHTML = '';
+
+      if (savedFoods.length === 0) {
+        savedFoodsDropdown.innerHTML = '<option value="">Kaydedilen tarif bulunmuyor</option>';
+        selectedSavedFoodRecipeDiv.innerHTML = '<p>Henüz favori tarifiniz yok.</p>';
+        return;
+      }
+
+      savedFoods.forEach((item, index) => {
+        const option = document.createElement('option');
+        option.value = index;
+        option.textContent = `${index + 1}. Tarif: ${item.name}`;
+        savedFoodsDropdown.appendChild(option);
+      });
+
+      if (savedFoods.length > 0) {
+        displaySelectedSavedFood();
+      }
+    }
+
+    function displaySelectedSavedFood() {
+      const savedFoodsDropdown = document.getElementById('saved-foods-dropdown');
+      const selectedIndex = savedFoodsDropdown.value;
+      const selectedSavedFoodRecipeDiv = document.getElementById('selected-saved-food-recipe');
+
+      if (selectedIndex === "") {
+        selectedSavedFoodRecipeDiv.innerHTML = '<p>Bir favori tarif seçiniz.</p>';
+        return;
+      }
+
+      const item = savedFoods[selectedIndex];
+      selectedSavedFoodRecipeDiv.innerHTML = `
+        <div class="saved-food-item">
+          <h3>${item.name}</h3>
+          <p><strong>Malzemeler:</strong> ${item.ingredients?.join(', ') || '-'}</p>
+          <p><strong>Tarif:</strong></p>
+          <ol>${item.instructions?.map(step => `<li>${step}</li>`).join('') || ''}</ol>
+          <p><strong>Kalori:</strong> ${item.calories || '-'} kcal</p>
+          <p><strong>Porsiyon:</strong> ${item.portions || '-'}</p>
+          <p><strong>Hazırlık Süresi:</strong> ${item.prepTime || '-'} dakika</p>
+          <p><strong>Sağlık Puanı:</strong> ${item.healthRating || '-'}/10</p>
+        </div>
+      `;
+    }
+
+    async function sendChat() {
+      const input = document.getElementById('chat-message');
+      const message = input.value.trim();
+      if (!message) return;
+
+      const chatBox = document.getElementById('chat-box');
+      chatBox.innerHTML += `<p><strong>Siz:</strong> ${message}</p>`;
+      input.value = '';
+
+      try {
+        const response = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message })
+        });
+        const data = await response.json();
+        chatBox.innerHTML += `<p><strong>RecipeFinder:</strong> ${data.response}</p>`;
+        chatBox.scrollTop = chatBox.scrollHeight;
+      } catch (err) {
+        chatBox.innerHTML += `<p><strong>RecipeFinder:</strong> Hata oluştu.</p>`;
+        chatBox.scrollTop = chatBox.scrollHeight;
+      }
+    }
+  </script>
+</body>
+</html>
